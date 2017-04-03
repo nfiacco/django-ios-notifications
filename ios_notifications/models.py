@@ -13,7 +13,6 @@ except ImportError:
     import datetime
     dt_now = datetime.datetime.now
 
-from django_fields.fields import EncryptedCharField
 import OpenSSL
 
 try:
@@ -85,9 +84,6 @@ class APNService(BaseService):
     """
     certificate = models.TextField()
     private_key = models.TextField()
-    passphrase = EncryptedCharField(
-        null=True, blank=True, help_text='Passphrase for the private key',
-        block_type='MODE_CBC')
 
     PORT = 2195
     fmt = '!cH32sH%ds'
@@ -97,7 +93,7 @@ class APNService(BaseService):
         Establishes an encrypted SSL socket connection to the service.
         After connecting the socket can be written to or read from.
         """
-        return super(APNService, self)._connect(self.certificate, self.private_key, self.passphrase)
+        return super(APNService, self)._connect(self.certificate, self.private_key)
 
     def push_notification_to_devices(self, notification, devices=None, chunk_size=100):
         """
